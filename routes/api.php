@@ -13,7 +13,7 @@ Route::prefix("/auth")->group(function () {
     Route::post('/login', [LoginController::class, 'login']);
     Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
     Route::post('/register', [RegisterController::class, 'register']);
-})
+});
 
 Route::middleware('auth:sanctum')->prefix("/user")->group(function () {
     Route::get('/me', function (Request $request) {
@@ -29,4 +29,5 @@ Route::get('/leaderboard', [LeaderboardController::class, 'index']);
 Route::prefix("/quizzes")->group(function () {
     Route::get('', [QuizController::class, 'index']);
     Route::get('/{id}/questions', [QuizController::class, 'showQuestions']);
-});
+    Route::post('/{id}/submit', [QuizController::class, 'submit']);
+})->middleware('auth:sanctum');
