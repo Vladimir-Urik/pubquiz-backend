@@ -22,6 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'avatar',
     ];
 
     /**
@@ -45,5 +46,15 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    /**
+     * Calculate the user's level based on XP.
+     *
+     * @return int
+     */
+    public function getLevelAttribute(): int
+    {
+        return (int) floor(sqrt($this->xp / 100)); // Example level calculation
     }
 }
