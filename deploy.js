@@ -70,13 +70,20 @@ async function deploy() {
         await ssh.execCommand('php artisan migrate', { cwd: config.remoteDeploymentPath });
 
         console.log('Optimizing Laravel...');
+        await ssh.execCommand('php artisan cache:clear', { cwd: config.remoteDeploymentPath });
+        await ssh.execCommand('php artisan config:clear', { cwd: config.remoteDeploymentPath });
+        await ssh.execCommand('php artisan view:clear', { cwd: config.remoteDeploymentPath });
         await ssh.execCommand('php artisan optimize', { cwd: config.remoteDeploymentPath });
         await ssh.execCommand('php artisan view:cache', { cwd: config.remoteDeploymentPath });
         await ssh.execCommand('php artisan config:cache', { cwd: config.remoteDeploymentPath });
 
-        console.log('Setting proper permissions...');
+        console.log('Setting up cache directories and permissions...');
+        await ssh.execCommand('mkdir -p storage/framework/views storage/framework/cache storage/framework/sessions', { cwd: config.remoteDeploymentPath });
+        await ssh.execCommand('php artisan storage:link', { cwd: config.remoteDeploymentPath });
         await ssh.execCommand('chown -R www-data:www-data .', { cwd: config.remoteDeploymentPath });
-        await ssh.execCommand('chmod -R 755 storage bootstrap/cache', { cwd: config.remoteDeploymentPath });
+        await ssh.execCommand('chown -R www-data:www-data storage', { cwd: config.remoteDeploymentPath });
+        await ssh.execCommand('chmod -R 775 storage bootstrap/cache', { cwd: config.remoteDeploymentPath });
+        await ssh.execCommand('chmod -R 775 storage/* bootstrap/cache', { cwd: config.remoteDeploymentPath });
 
         console.log('Cleaning up local archive...');
         fs.unlinkSync(archivePath);
