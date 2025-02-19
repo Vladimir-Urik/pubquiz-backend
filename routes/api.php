@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AvatarsController;
 use App\Http\Controllers\LoginController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\UserSettingsController;
@@ -23,7 +24,7 @@ Route::middleware('auth:sanctum')->prefix("/user")->group(function () {
     Route::post('/update', [UserSettingsController::class, 'update']);
 });
 
-Route::get('/avatars', [UserSettingsController::class, 'getAvatars']);
+Route::get('/avatars', [AvatarsController::class, 'all']);
 Route::get('/leaderboard', [LeaderboardController::class, 'index']);
 
 Route::prefix("/quizzes")->group(function () {

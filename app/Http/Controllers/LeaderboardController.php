@@ -14,8 +14,8 @@ class LeaderboardController extends Controller
      */
     public function index(): JsonResponse
     {
-        $users = User::orderBy('xp', 'desc')->take(13)->get(['id', 'name', 'xp', 'level', 'avatar']);
+        $users = User::orderBy('xp', 'desc')->take(13)->get(['id', 'name', 'xp', 'avatar']);
         
         return response()->json($users);
     }
-} 
+}

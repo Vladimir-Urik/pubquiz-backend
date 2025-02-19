@@ -25,6 +25,8 @@ class User extends Authenticatable
         'avatar',
     ];
 
+    protected $appends = ['level'];
+
     /**
      * The attributes that should be hidden for serialization.
      *
