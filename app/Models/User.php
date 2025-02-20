@@ -1,62 +1,71 @@
 <?php
 
-namespace App\Models;
+namespace App\Models; // Definuje jmenný prostor pro modely aplikace
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
+use Illuminate\Database\Eloquent\Factories\HasFactory; // Použití továrny pro generování dat
+use Illuminate\Foundation\Auth\User as Authenticatable; // Umožňuje autentifikaci uživatele
+use Illuminate\Notifications\Notifiable; // Povolení notifikací pro uživatele
+use Laravel\Sanctum\HasApiTokens; // Umožňuje použití API tokenů pomocí Sanctum
 
+/**
+ * Model User reprezentuje uživatele v aplikaci.
+ */
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable, HasApiTokens;
+    use HasFactory, Notifiable, HasApiTokens; // Použití vlastností pro továrny, notifikace a API tokeny
 
     /**
-     * The attributes that are mass assignable.
+     * Atributy, které lze hromadně přiřazovat (mass assignment).
      *
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'avatar',
+        'name',     // Jméno uživatele
+        'email',    // E-mailová adresa uživatele
+        'password', // Heslo uživatele
+        'avatar',   // Cesta k avataru uživatele
     ];
 
+    /**
+     * Atributy, které budou přidány k serializovanému modelu.
+     * Tato funkce přidává level na základě XP.
+     *
+     * @var list<string>
+     */
     protected $appends = ['level'];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * Atributy, které by měly být skryté při serializaci modelu.
      *
      * @var list<string>
      */
     protected $hidden = [
-        'password',
-        'remember_token',
+        'password',       // Heslo uživatele, které bude skryté při serializaci
+        'remember_token', // Token pro zapamatování přihlášení
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * Definuje, jaké atributy budou přetypovány (casted) při serializaci.
      *
      * @return array<string, string>
      */
     protected function casts(): array
     {
         return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
+            'email_verified_at' => 'datetime', // Přetypování na datetime pro ověření e-mailu
+            'password' => 'hashed',            // Heslo bude uložené jako hash
         ];
     }
 
     /**
-     * Calculate the user's level based on XP.
+     * Spočítá úroveň uživatele na základě XP.
+     * Používá jednoduchý vzorec, kde se úroveň počítá z XP: floor(sqrt(XP / 100)).
      *
      * @return int
      */
     public function getLevelAttribute(): int
     {
-        return (int) floor(sqrt($this->xp / 100)); // Example level calculation
+        return (int) floor(sqrt($this->xp / 100)); // Výpočet úrovně na základě XP
     }
 }
