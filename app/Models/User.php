@@ -22,7 +22,7 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'avatar',
+        'avatar_id',
     ];
 
     protected $appends = ['level'];
@@ -58,5 +58,10 @@ class User extends Authenticatable
     public function getLevelAttribute(): int
     {
         return (int) floor(sqrt($this->xp / 100)); // Example level calculation
+    }
+
+    public function avatar()
+    {
+        return $this->belongsTo(Avatar::class);
     }
 }

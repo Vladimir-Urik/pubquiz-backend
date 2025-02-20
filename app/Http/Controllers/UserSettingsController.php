@@ -27,7 +27,7 @@ class UserSettingsController extends Controller
                 'avatar_id' => 'required|exists:avatars,id',
             ]);
             $avatar = Avatar::find($request->avatar_id);
-            $user->avatar = $avatar->path; // Uložení cesty k avataru
+            $user->avatar_id = $avatar->id; // Uložení cesty k avataru
         }
 
         $user->save();
@@ -52,4 +52,4 @@ class UserSettingsController extends Controller
 
         return response()->json($users);
     }
-} 
+}
