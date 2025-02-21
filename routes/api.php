@@ -28,8 +28,8 @@ Route::middleware('auth:sanctum')->prefix("/user")->group(function () {
 Route::get('/avatars', [AvatarsController::class, 'all']);
 Route::get('/leaderboard', [LeaderboardController::class, 'index']);
 
-Route::prefix("/quizzes")->group(function () {
+Route::middleware('auth:sanctum')->prefix("/quizzes")->group(function () {
     Route::get('', [QuizController::class, 'index']);
     Route::get('/{id}/questions', [QuizController::class, 'showQuestions']);
     Route::post('/{id}/submit', [QuizController::class, 'submit']);
-})->middleware('auth:sanctum');
+});
